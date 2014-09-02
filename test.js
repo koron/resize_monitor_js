@@ -24,6 +24,10 @@ function runTest() {
   m.startMonitor(d.getElementById('box5'), f5 = function() {
     console.log('box5', arguments);
   });
+
+  m.startMonitor(function() {
+    console.log('root', arguments);
+  });
 }
 
 global.addEventListener('load', runTest);

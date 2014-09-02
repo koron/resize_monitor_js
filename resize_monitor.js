@@ -11,7 +11,7 @@
 
   function Size(el) {
     var r;
-    if (el === undef || el.getBoundingClientRect === undef) {
+    if (el == undef || el['getBoundingClientRect'] === undef) {
       this.valid = false;
       this.width = -1;
       this.height = -1;
@@ -84,30 +84,35 @@
   };
 
   Monitor.prototype.startMonitor = function(el, func) {
+    var d;
     if (func === undef) {
-      throw "can't accept null function";
+      func = el;
+      el = null;
     }
-    var d = { el: el, func: func, size: new Size(el) };
+    if (typeof func !== 'function') {
+      throw 'no monitor function';
+    }
+    d = { el: el, func: func, size: new Size(el) };
     this._monitors.push(d);
   };
 
-  Monitor.prototype.stopMonitor = function(v1, v2) {
+  Monitor.prototype.stopMonitor = function(el_or_func, func) {
     var is_match, i, target;
 
     // Detemine filter function.
-    if (v1 === undef && v2 === undef) {
+    if (el_or_func === undef && func === undef) {
       throw 'no monitor specified';
     }
-    if (v1 !== undef && v2 !== undef) {
+    if (el_or_func !== undef && func !== undef) {
       is_match = function(item) {
-        return (item.el === v1 && item.func === v2);
+        return (item.el === el_or_func && item.func === func);
       };
     } else {
-      if (v1 === undef) {
-        v1 = v2;
+      if (el_or_func == undef) {
+        el_or_func = func;
       }
       is_match = function(item) {
-        return (item.el === v1 || item.func === v2);
+        return (item.el === el_or_func || item.func === el_or_func);
       };
     }
 
