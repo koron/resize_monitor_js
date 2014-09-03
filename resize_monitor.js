@@ -134,4 +134,4 @@
   monitor._install(global);
 
   global.ResizeMonitor = monitor;
-})(window);
+})(this);
